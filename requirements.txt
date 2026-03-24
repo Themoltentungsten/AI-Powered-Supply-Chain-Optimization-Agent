@@ -1,0 +1,27 @@
+# ── Backend ──────────────────────────────────────────────
+fastapi
+uvicorn[standard]
+sqlalchemy[asyncio]
+asyncpg
+psycopg2-binary
+pydantic-settings
+python-dotenv
+
+# ── Frontend ─────────────────────────────────────────────
+streamlit
+plotly
+pandas
+requests
+
+# ── Forecasting (Day 3) ─────────────────────────────────
+prophet
+
+# ── Agent & LLM (Day 4) ─────────────────────────────────
+langchain
+langchain-openai
+langchain-community
+openai
+chromadb
+
+# ── External APIs ────────────────────────────────────────
+httpx
