@@ -1,27 +1,31 @@
-# ── Backend ──────────────────────────────────────────────
+# ═══════════════════════════════════════════════════════════════════════
+#  DAY 1: Backend + Frontend base deps
+#  DAY 2: Added httpx (weather), matplotlib (diagram)
+#  DAY 3: Added prophet, chromadb
+# ═══════════════════════════════════════════════════════════════════════
+
+# ── DAY 1: Backend ───────────────────────────────────────────────────
 fastapi
 uvicorn[standard]
-sqlalchemy[asyncio]
-asyncpg
-psycopg2-binary
+sqlalchemy
 pydantic-settings
 python-dotenv
 
-# ── Frontend ─────────────────────────────────────────────
+# ── DAY 1: Frontend ──────────────────────────────────────────────────
 streamlit
 plotly
 pandas
 requests
 
-# ── Forecasting (Day 3) ─────────────────────────────────
+# ── DAY 2: External APIs + weather ───────────────────────────────────
+httpx
+matplotlib
+
+# ── DAY 3: Forecasting ──────────────────────────────────────────────
 prophet
 
-# ── Agent & LLM (Day 4) ─────────────────────────────────
-langchain
-langchain-openai
-langchain-community
-openai
+# ── DAY 3: RAG for risk analysis ────────────────────────────────────
 chromadb
 
-# ── External APIs ────────────────────────────────────────
-httpx
+# ── DAY 1: Data ─────────────────────────────────────────────────────
+numpy

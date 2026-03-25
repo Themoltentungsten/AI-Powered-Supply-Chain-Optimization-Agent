@@ -94,7 +94,7 @@ psql -d supply_chain -f database/schema.sql
 
 ```bash
 cp .env.example .env
-# Edit .env with your database credentials and API keys
+# Edit .env with your database credentials and API keys (keep this file local only; it is gitignored)
 ```
 
 ### 4. Start the Backend
@@ -121,6 +121,7 @@ streamlit run frontend/app.py
 | GET | `/api/v1/forecasts/{id}` | Get demand forecasts |
 | GET | `/api/v1/purchase-orders` | List purchase orders |
 | GET | `/api/v1/purchase-orders/{id}` | Get PO details with line items |
+| GET | `/api/v1/weather?q=` | Current weather from [WeatherAPI](https://www.weatherapi.com/) (uses `WEATHERAPI_KEY` in `.env`) |
 
 ## Team Roles
 

@@ -1,11 +1,20 @@
+# ═══════════════════════════════════════════════════════════════════════
+#  DAY 1: All ORM models (Product, Supplier, Inventory, SalesHistory,
+#         PurchaseOrder, PurchaseOrderItem, RiskEvent, WeatherData,
+#         DemandForecast)
+#  DAY 2: Minor tweaks for SQLite compatibility
+# ═══════════════════════════════════════════════════════════════════════
+
 from datetime import date, datetime
 from sqlalchemy import (
     String, Integer, Numeric, Boolean, Text, Date, DateTime,
-    ForeignKey, UniqueConstraint, Index, Computed,
+    ForeignKey, UniqueConstraint, Index,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..database import Base
 
+
+# ── DAY 1 START: Core ORM models ────────────────────────────────────
 
 class Product(Base):
     __tablename__ = "products"
@@ -127,6 +136,10 @@ class PurchaseOrderItem(Base):
 
     purchase_order: Mapped["PurchaseOrder"] = relationship(back_populates="items")
 
+# ── DAY 1 END ────────────────────────────────────────────────────────
+
+
+# ── DAY 1 START: Risk, Weather, Forecast models ─────────────────────
 
 class RiskEvent(Base):
     __tablename__ = "risk_events"
@@ -186,3 +199,5 @@ class DemandForecast(Base):
         UniqueConstraint("product_id", "forecast_date", "model_version", name="uq_forecast_product_date_model"),
         Index("idx_forecast_product_date", "product_id", "forecast_date"),
     )
+
+# ── DAY 1 END ────────────────────────────────────────────────────────
