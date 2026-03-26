@@ -183,6 +183,18 @@ Then run `python database/seed_data.py` again. For coursework / demos aligned wi
 | POST | `/api/v1/agent/scan` | Scan all below-ROP products and auto-draft POs |
 | GET | `/api/v1/agent/po-history` | List agent-generated POs with reasoning |
 
+## Day 4 Demo (Agent + Weather-Aware PO)
+
+Use the frontend to show the end-to-end pipeline:
+1. **Data Manager** → load **Option 2: Farming / Crops Dataset** (mixed stock: above ROP, below ROP, and below safety stock) with crop-specific risk alerts.
+2. **Agent Orchestration** → enter a **Weather location** (e.g., `Mumbai`) and click **Run Full Agent** for a crop.
+3. The agent will:
+   - fetch inventory + computed **ROP/EOQ**
+   - auto-generate a **Prophet forecast** if no forecast exists yet
+   - fetch live **weather**
+   - run **risk intelligence** via Risk RAG (ChromaDB)
+   - choose the best supplier and **draft a PO** (status = `draft`) when reorder triggers fire.
+
 ## Team Roles
 
 | Role | Responsibility |
