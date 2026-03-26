@@ -8,7 +8,7 @@ This folder tracks what was completed each project day before pushing to GitHub.
 | Day 2 | [day-2](day-2/) | Done |
 | Day 3 | [day-3](day-3/) | Done |
 | Day 4 | [day-4](day-4/) | Done |
-| Day 5 | [day-5](day-5/) | Pending |
-| Day 6 | [day-6](day-6/) | Pending |
+| Day 5 | [day-5](day-5/) | Done |
+| Day 6 | [day-6](day-6/) | Done |
 
 Update each `day-N/README.md` when that day's work is finished, then commit.

@@ -97,3 +97,8 @@ app.include_router(data_manager.router, prefix="/api/v1")
 from .routers import agent as agent_router
 app.include_router(agent_router.router, prefix="/api/v1")
 # ── DAY 4 END ────────────────────────────────────────────────────────
+
+# ── DAY 5 START: Savings report router ────────────────────────────────
+from .routers import savings as savings_router
+app.include_router(savings_router.router, prefix="/api/v1")
+# ── DAY 5 END ────────────────────────────────────────────────────────

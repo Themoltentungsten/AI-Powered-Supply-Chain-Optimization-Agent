@@ -63,8 +63,8 @@ Day-by-day documentation lives under [`progress/`](progress/). Start at [`progre
 | Day 2 | Data Integration & Skeleton Pipeline | Set up PostgreSQL and ingest mock historical POS/inventory data. Integrate external weather (e.g. [WeatherAPI](https://www.weatherapi.com/)). Scaffold data view in Streamlit. | Running skeleton: backend fetches DB + weather API data and displays raw tables/charts in Streamlit. |
 | Day 3 | Core Forecasting & RAG Features | Implement Prophet for daily/weekly rolling forecasts with confidence intervals. Build lightweight RAG pipeline over historical supply chain incidents. | Functional forecast engine + risk retrieval module with test cases and holdout validation. |
 | Day 4 | Agent Orchestration & PO Generation | Implement ROP/EOQ logic. Set up LangChain ReAct tools to query inventory, run forecast, generate PO, and retrieve risk intelligence. | End-to-end internal pipeline where agent monitors stock and drafts purchase orders. |
-| Day 5 | Dashboard, Polish & Storytelling | Finalize Streamlit UI with Plotly charts for stock, forecast, and risk alerts. Add monthly savings visualization and polish UX for demo. | Demo-ready dashboard with clean visuals, active scenario, and business impact narrative. |
-| Day 6 | Final Live Demo & Q&A Defense | Run live walkthrough with seasonal demand scenario. Prepare role-based speaking flow and backup demo video. | Successful end-to-end demo and clear defense of technical choices (Prophet, ReAct, RAG). |
+| Day 5 | Dashboard, Polish & Storytelling | Finalize Streamlit UI with Plotly charts for stock, forecast, and risk alerts. Add monthly savings visualization and polish UX for demo. Stockout prediction timeline. | Demo-ready dashboard with clean visuals, active scenario, savings report, and business impact narrative. |
+| Day 6 | Final Live Demo & Q&A Defense | Run live walkthrough with seasonal demand scenario. Prepare role-based speaking flow, Q&A defense, and backup demo video. | Successful end-to-end demo and clear defense of technical choices (Prophet, ReAct, RAG). |
 
 ### Day 1 KPI Alignment
 
@@ -182,6 +182,7 @@ Then run `python database/seed_data.py` again. For coursework / demos aligned wi
 | POST | `/api/v1/agent/run/{id}` | Run ReAct agent for a product (OpenAI) |
 | POST | `/api/v1/agent/scan` | Scan all below-ROP products and auto-draft POs |
 | GET | `/api/v1/agent/po-history` | List agent-generated POs with reasoning |
+| GET | `/api/v1/savings/report` | Savings analysis: stockout predictions, cost breakdown, projected savings |
 
 ## Day 4 Demo (Agent + Weather-Aware PO)
 
