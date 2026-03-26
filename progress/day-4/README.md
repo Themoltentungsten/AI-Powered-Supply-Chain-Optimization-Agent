@@ -12,20 +12,21 @@ Integration & Stability — LangChain ReAct agent with OpenAI GPT-4o-mini.
 - **PO drafting** — creates `PurchaseOrder` + `PurchaseOrderItem` in DB
 
 ### Agent Service (`backend/app/services/agent_service.py`)
-- ReAct-style agent that calls four tools:
+- ReAct-style agent that calls tools to gather context and then decides:
   1. `check_inventory` — stock levels, ROP, EOQ
-  2. `get_forecast` — Prophet demand forecast summary
-  3. `search_risks` — ChromaDB semantic risk search
-  4. `select_supplier` — composite supplier scoring
-- Sends full context to **OpenAI GPT-4o-mini** with chain-of-thought prompt
+  2. `get_forecast` — reads stored forecasts from DB, and if missing auto-runs Prophet
+  3. `get_weather` — fetches live weather (WeatherAPI) using the provided location
+  4. `search_risks` — ChromaDB semantic risk search (Risk RAG)
+  5. `select_supplier` — composite supplier scoring (price/reliability/lead-time)
+- Sends full context to **OpenAI GPT-4o-mini** with weather-aware chain-of-thought prompt
 - Parses `DECISION: REORDER <qty>` or `DECISION: NO_REORDER`
 - Auto-drafts PO when reorder triggered
 - **Fallback**: if OpenAI fails, uses deterministic ROP/EOQ logic
 
 ### Agent Router (`backend/app/routers/agent.py`)
 - `GET /api/v1/agent/stock-analysis/{product_id}` — ROP/EOQ without LLM
-- `POST /api/v1/agent/run/{product_id}` — full agent loop
-- `POST /api/v1/agent/scan` — scan all below-ROP products
+- `POST /api/v1/agent/run/{product_id}?location=...` — full agent loop with weather-aware context
+- `POST /api/v1/agent/scan?location=...` — scan all below-ROP products with weather-aware context
 - `GET /api/v1/agent/po-history` — agent-generated PO list
 
 ### Frontend (`frontend/app.py` — Agent Orchestration page)
@@ -34,12 +35,21 @@ Integration & Stability — LangChain ReAct agent with OpenAI GPT-4o-mini.
 - Bulk scan of all low-stock products
 - PO history table with reasoning expanders
 - Tool call debug log
+- Weather location input to drive weather-aware decisions
+
+### Farming / Crops Dataset for Demo
+- Added `database/seed_farming.py` to create a “farmer crops” dataset:
+  - 15 crop products
+  - mixed inventory zones: above ROP, below ROP, and below safety stock (critical)
+  - agriculture-specific risk alerts (drought, pest outbreak, floods, heatwave, etc.)
+- Added backend endpoint: `POST /api/v1/data-sources/load-farming`
+- Added frontend button in Data Manager to load this dataset quickly for demos
 
 ## Prompt Tuning Log
 1. Initial prompt asked for generic analysis — agent produced vague reasoning.
 2. Added explicit supplier scoring weights (35/35/30) — improved specificity.
-3. Required `DECISION: REORDER <qty>` format — enabled reliable parsing.
-4. Added risk context — agent now warns about delivery delays before ordering.
+3. Required strict output end format: `DECISION: REORDER <qty>` or `DECISION: NO_REORDER` — improved parsing reliability.
+4. Added weather + extreme-condition instructions — improved “order/no-order” decisions for perishable crops.
 5. Set temperature to 0.3 — reduced variance in deterministic decisions.
 
 ## KPIs
