@@ -201,3 +201,16 @@ class DemandForecast(Base):
     )
 
 # ── DAY 1 END ────────────────────────────────────────────────────────
+
+
+class DataSource(Base):
+    __tablename__ = "data_sources"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    source_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    source_file: Mapped[str | None] = mapped_column(String(500))
+    product_count: Mapped[int] = mapped_column(Integer, default=0)
+    sales_count: Mapped[int] = mapped_column(Integer, default=0)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=False)
+    loaded_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

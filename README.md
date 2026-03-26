@@ -28,7 +28,7 @@ Data Integration → Demand Forecasting → Agent Orchestration → Streamlit Da
 │   └── app/
 │       ├── main.py              # FastAPI application entry point
 │       ├── config.py            # Settings and environment config
-│       ├── database.py          # PostgreSQL async connection
+│       ├── database.py          # SQLAlchemy engine (PostgreSQL or SQLite)
 │       ├── models/
 │       │   └── schema.py        # SQLAlchemy ORM models
 │       ├── routers/
@@ -73,41 +73,97 @@ Day-by-day documentation lives under [`progress/`](progress/). Start at [`progre
 - **Architecture understanding:** Pipeline is **Data Integration -> Demand Forecasting -> Agent Orchestration -> Streamlit Dashboard**.
 - **Team roles defined:** Clear ownership for Data/Forecasting, Backend/Agents, and Frontend/Visualization.
 
-## Quick Start
+## Quick Start (PostgreSQL)
 
-### 1. Install Dependencies
+The app is intended to run against **PostgreSQL** (see `DATABASE_URL` in `.env`). Tables and seed data are created by the Python seed script; you do not need to run `schema.sql` manually unless you prefer raw SQL.
+
+### 1. Install PostgreSQL and `psql`
+
+- Install [PostgreSQL for Windows](https://www.postgresql.org/download/windows/) (or `winget install PostgreSQL.PostgreSQL.18`).
+- Ensure `psql` is on your PATH (default: `C:\Program Files\PostgreSQL\<version>\bin`).
+
+### 2. Create the database
+
+**Windows (PowerShell)** — use `psql` as the superuser (adjust user/host if yours differ):
+
+```powershell
+$env:PGPASSWORD = "your_postgres_password"
+psql -U postgres -h localhost -p 5432 -d postgres -c "CREATE DATABASE supply_chain;"
+```
+
+**macOS / Linux:**
+
+```bash
+createdb supply_chain
+# or: psql -U postgres -c "CREATE DATABASE supply_chain;"
+```
+
+### 3. Install Python dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Set Up PostgreSQL
+This includes **`psycopg2-binary`** so SQLAlchemy can connect to PostgreSQL.
 
-Create the database and run the schema:
+### 4. Configure environment
 
-```bash
-createdb supply_chain
-psql -d supply_chain -f database/schema.sql
-```
+**Windows (PowerShell):** `Copy-Item .env.example .env`  
+**macOS / Linux:** `cp .env.example .env`
 
-### 3. Configure Environment
+Edit `.env` and set:
 
-```bash
-cp .env.example .env
-# Edit .env with your database credentials and API keys (keep this file local only; it is gitignored)
-```
+- **`DATABASE_URL`** — must point at your PostgreSQL instance, e.g.  
+  `postgresql://postgres:YOUR_PASSWORD@localhost:5432/supply_chain`  
+  (Use a single `DATABASE_URL` line; duplicate keys override each other.)
 
-### 4. Start the Backend
+- **`WEATHERAPI_KEY`** — from [WeatherAPI.com](https://www.weatherapi.com/) (optional for weather pages).
+
+Keep `.env` local; it is gitignored.
+
+### 5. Create tables and load data (one DB: your `DATABASE_URL`)
+
+Everything below writes to the **same** database as in `.env` (PostgreSQL or SQLite). Pick one path for testing.
+
+| Goal | Command |
+|------|---------|
+| **Synthetic demo** (seasonal mock data + risk events) | `python database/load_project_data.py seed` |
+| Re-run synthetic after Kaggle / old seed | `python database/load_project_data.py seed --replace` |
+| **Kaggle** (Superstore preset, needs [Kaggle API](https://github.com/Kaggle/kaggle-api/blob/main/docs/README.md) + `kagglehub`) | `python database/load_project_data.py kaggle` |
+| Kaggle Online Retail preset | `python database/load_project_data.py kaggle --preset online-retail` |
+| **Local CSV** (Superstore- or Online-Retail-shaped) | `python database/load_project_data.py csv --path "C:\path\to\file.csv"` |
+
+Optional limits: add `--max-products 80` to `kaggle` or `csv` subcommands.
+
+After a **Kaggle** or **csv** import, restart the backend and regenerate forecasts in the UI (`demand_forecasts` is cleared on import).
+
+Details and column detection: docstring in `database/import_kaggle_retail.py`.
+
+Legacy one-offs (still valid): `python database/seed_data.py`, `python database/fetch_superstore_kagglehub.py`, `python database/import_kaggle_retail.py --csv ...`.
+
+### 6. Start the backend
 
 ```bash
 uvicorn backend.app.main:app --reload --port 8000
 ```
 
-### 5. Start the Frontend
+API docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+
+### 7. Start the frontend
 
 ```bash
 streamlit run frontend/app.py
 ```
+
+### Optional: SQLite only for quick tests
+
+If you temporarily use SQLite, set in `.env`:
+
+```env
+DATABASE_URL=sqlite:///./supply_chain.db
+```
+
+Then run `python database/seed_data.py` again. For coursework / demos aligned with the project spec, prefer **PostgreSQL**.
 
 ## API Endpoints
 
@@ -122,6 +178,10 @@ streamlit run frontend/app.py
 | GET | `/api/v1/purchase-orders` | List purchase orders |
 | GET | `/api/v1/purchase-orders/{id}` | Get PO details with line items |
 | GET | `/api/v1/weather?q=` | Current weather from [WeatherAPI](https://www.weatherapi.com/) (uses `WEATHERAPI_KEY` in `.env`) |
+| GET | `/api/v1/agent/stock-analysis/{id}` | ROP / EOQ analysis for a product |
+| POST | `/api/v1/agent/run/{id}` | Run ReAct agent for a product (OpenAI) |
+| POST | `/api/v1/agent/scan` | Scan all below-ROP products and auto-draft POs |
+| GET | `/api/v1/agent/po-history` | List agent-generated POs with reasoning |
 
 ## Team Roles
 

@@ -2,6 +2,7 @@
 #  DAY 1: FastAPI app creation, CORS, initial routers
 #  DAY 2: Added weather router, sync lifespan
 #  DAY 3: Added risk router, RAG index init at startup
+#  DAY 4: Added agent orchestration router
 # ═══════════════════════════════════════════════════════════════════════
 
 from contextlib import asynccontextmanager
@@ -23,6 +24,7 @@ from .routers import weather
 
 # ── DAY 3 START: Risk router + RAG init helper ──────────────────────
 from .routers import risk
+from .routers import data_manager
 from .models.schema import RiskEvent
 from .services.risk_rag_service import init_risk_index
 # ── DAY 3 END ────────────────────────────────────────────────────────
@@ -88,3 +90,10 @@ app.include_router(weather.router, prefix="/api/v1")
 # ── DAY 3 START: Register risk router ────────────────────────────────
 app.include_router(risk.router, prefix="/api/v1")
 # ── DAY 3 END ────────────────────────────────────────────────────────
+
+app.include_router(data_manager.router, prefix="/api/v1")
+
+# ── DAY 4 START: Register agent orchestration router ──────────────────
+from .routers import agent as agent_router
+app.include_router(agent_router.router, prefix="/api/v1")
+# ── DAY 4 END ────────────────────────────────────────────────────────

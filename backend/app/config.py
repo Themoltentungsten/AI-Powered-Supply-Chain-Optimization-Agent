@@ -1,6 +1,7 @@
 # ═══════════════════════════════════════════════════════════════════════
 #  DAY 1: Initial configuration class (app name, DB URL, OpenAI key)
 #  DAY 2: Added weather provider settings, switched default to SQLite
+#  DAY 4: Added agent model settings
 # ═══════════════════════════════════════════════════════════════════════
 
 from functools import lru_cache
@@ -35,6 +36,11 @@ class Settings(BaseSettings):
     weather_provider: str = "weatherapi"
     weatherapi_key: str = ""
     # ── DAY 2 END ────────────────────────────────────────────────────
+
+    # ── DAY 4 START: Agent / LLM settings ─────────────────────────────
+    agent_llm_model: str = "gpt-4o-mini"
+    agent_temperature: float = 0.3
+    # ── DAY 4 END ────────────────────────────────────────────────────
 
 
 @lru_cache

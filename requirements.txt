@@ -7,7 +7,9 @@
 # ── DAY 1: Backend ───────────────────────────────────────────────────
 fastapi
 uvicorn[standard]
+python-multipart
 sqlalchemy
+psycopg2-binary
 pydantic-settings
 python-dotenv
 
@@ -27,5 +29,14 @@ prophet
 # ── DAY 3: RAG for risk analysis ────────────────────────────────────
 chromadb
 
+# ── DAY 4: LangChain ReAct Agent + OpenAI ─────────────────────────
+openai
+langchain
+langchain-openai
+langchain-community
+
 # ── DAY 1: Data ─────────────────────────────────────────────────────
 numpy
+
+# ── Optional: download Kaggle datasets from Python ──────────────────
+kagglehub
