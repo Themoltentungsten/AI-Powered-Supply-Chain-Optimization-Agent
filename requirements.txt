@@ -1,0 +1,42 @@
+# ═══════════════════════════════════════════════════════════════════════
+#  DAY 1: Backend + Frontend base deps
+#  DAY 2: Added httpx (weather), matplotlib (diagram)
+#  DAY 3: Added prophet, chromadb
+# ═══════════════════════════════════════════════════════════════════════
+
+# ── DAY 1: Backend ───────────────────────────────────────────────────
+fastapi
+uvicorn[standard]
+python-multipart
+sqlalchemy
+psycopg2-binary
+pydantic-settings
+python-dotenv
+
+# ── DAY 1: Frontend ──────────────────────────────────────────────────
+streamlit
+plotly
+pandas
+requests
+
+# ── DAY 2: External APIs + weather ───────────────────────────────────
+httpx
+matplotlib
+
+# ── DAY 3: Forecasting ──────────────────────────────────────────────
+prophet
+
+# ── DAY 3: RAG for risk analysis ────────────────────────────────────
+chromadb
+
+# ── DAY 4: LangChain ReAct Agent + OpenAI ─────────────────────────
+openai
+langchain
+langchain-openai
+langchain-community
+
+# ── DAY 1: Data ─────────────────────────────────────────────────────
+numpy
+
+# ── Optional: download Kaggle datasets from Python ──────────────────
+kagglehub

@@ -1,0 +1,16 @@
+.env
+supply_chain.db
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+.idea/
+.vscode/
+*.log
+.DS_Store
+Thumbs.db
+chroma_data/
